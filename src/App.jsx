@@ -36,9 +36,10 @@ function App() {
     try{
       await updateUserPlaces([selectedPlace, ...userPlaces])
     }catch(error){
-      // .../
+      setUserPlaces(userPlaces)
     }
     
+
   }
 
   const handleRemovePlace = useCallback(async function handleRemovePlace() {
@@ -46,8 +47,20 @@ function App() {
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current.id)
     );
 
+    try{
+    await updateUserPlaces(
+      userPlaces.filter((place) => place.id !== selectedPlace.current.id)
+    )
+  }
+    catch(error){
+      selectedPlace(userPlaces)
+      setUserPlaces({
+        message: error.message || 'failed to delete place'
+      })
+  }
+
     setModalIsOpen(false);
-  }, []);
+  }, [userPlaces]);
 
   return (
     <>
